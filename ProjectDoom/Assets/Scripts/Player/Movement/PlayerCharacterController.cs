@@ -17,6 +17,7 @@ public class PlayerCharacterController : MonoBehaviour
     [SerializeField] private Animator pistolAnimator;
 
     private Vector3 characterVelocityMomentum;
+
     private bool isMoving;
     private bool canShoot = false;
 
@@ -34,6 +35,8 @@ public class PlayerCharacterController : MonoBehaviour
         OnShoot += PlayerCharacterController_OnShoot;
     }
 
+
+    //Animator stuff
     private void PlayerCharacterController_OnStopMoving(object sender, EventArgs e)
     {
         playerCameraAnimator.SetBool("IsWalking", isMoving);
@@ -64,7 +67,7 @@ public class PlayerCharacterController : MonoBehaviour
     {
         canShoot = true;
         ShootHandling();
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.6f);
         canShoot = false;
     }
 
@@ -75,6 +78,7 @@ public class PlayerCharacterController : MonoBehaviour
         transform.Rotate(new Vector3(0f, mouseX * mouseSensitivity, 0f), Space.Self);
     }
 
+    //Shoot Handling
     private void ShootHandling()
     {
         Vector3 halfBoxSize = new Vector3(0.5f, 0.55f, 20f);
@@ -104,9 +108,9 @@ public class PlayerCharacterController : MonoBehaviour
 
         OnShoot?.Invoke(this, EventArgs.Empty);
         Debug.Log("Shoot");
-
     }
 
+    //Movement Handling
     private void MovementHandling()
     {
         float x = Input.GetAxisRaw("Horizontal");
@@ -153,6 +157,7 @@ public class PlayerCharacterController : MonoBehaviour
         }
     }
 
+    //Health System stuff
     public void Damage(int damageAmount)
     {
         healthSystem.Damage(damageAmount);
