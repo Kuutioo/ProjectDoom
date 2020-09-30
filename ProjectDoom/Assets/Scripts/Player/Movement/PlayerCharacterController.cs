@@ -94,16 +94,6 @@ public class PlayerCharacterController : MonoBehaviour
                 shootCube.Damage();
                 break;
             }
-
-            if (collider.tag == "Cube")
-            {
-                Debug.Log("Hit Cube");
-                break;
-            }
-            else
-            {
-                Debug.Log("Hit Wall");
-            }
         }
 
         OnShoot?.Invoke(this, EventArgs.Empty);
