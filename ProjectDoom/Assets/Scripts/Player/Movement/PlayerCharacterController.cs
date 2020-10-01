@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCharacterController : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class PlayerCharacterController : MonoBehaviour
     public event EventHandler OnStartMoving;
     public event EventHandler OnStopMoving;
     public event EventHandler OnShoot;
+
+    public GameObject pistolFire;
 
     [SerializeField] private float moveSpeed = 12f;
     [SerializeField] private float mouseSensitivity = 1f;
@@ -25,6 +28,8 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void Awake()
     {
+        pistolFire.SetActive(false);
+
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -59,6 +64,7 @@ public class PlayerCharacterController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && (!canShoot))
         {
+            pistolFire.SetActive(true);
             StartCoroutine(FirePistol());
         }
     }
@@ -67,7 +73,13 @@ public class PlayerCharacterController : MonoBehaviour
     {
         canShoot = true;
         ShootHandling();
-        yield return new WaitForSeconds(0.6f);
+
+        yield return new WaitForSeconds(0.075f);
+
+        pistolFire.SetActive(false);
+
+        yield return new WaitForSeconds(0.5f);
+        
         canShoot = false;
     }
 
