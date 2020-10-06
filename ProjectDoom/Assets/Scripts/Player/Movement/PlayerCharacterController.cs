@@ -12,27 +12,54 @@ public class PlayerCharacterController : MonoBehaviour
     public event EventHandler OnStopMoving;
     public event EventHandler OnShoot;
 
-    public GameObject pistolFire;
+    private GameObject pistolFire;
+    private GameObject projectDoomGuyPistol;
+    private GameObject projectDoomGuy;
+
+    private Transform groundCheck;
+
+    public LayerMask whatIsGround;
 
     [SerializeField] private float moveSpeed = 12f;
     [SerializeField] private float mouseSensitivity = 1f;
-    [SerializeField] private Animator playerCameraAnimator;
-    [SerializeField] private Animator pistolAnimator;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float groundDistance = 0.4f;
+
+    private Animator playerCameraAnimator;
+    private Animator pistolAnimator;
+
+    private float cameraVerticalAngle;
+
+    private Camera playerCamera;
 
     private Vector3 characterVelocityMomentum;
+    private Vector3 velocity;
 
     private bool isMoving;
+    private bool isGrounded;
     private bool canShoot = false;
 
     private HealthSystem healthSystem;
 
     private void Awake()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        pistolFire = GameObject.Find("Pistol_Fire").gameObject;
+
         pistolFire.SetActive(false);
 
-        characterController = GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked;
+        projectDoomGuyPistol = GameObject.Find("Weapon").gameObject;
+        pistolAnimator = projectDoomGuyPistol.GetComponent<Animator>();
 
+        characterController = GetComponent<CharacterController>();
+
+        playerCamera = transform.Find("PlayerCamera").GetComponent<Camera>();
+        playerCameraAnimator = playerCamera.GetComponent<Animator>();
+
+        projectDoomGuy = this.gameObject;
+
+        groundCheck = projectDoomGuy.transform.Find("GroundCheck");
+       
         isMoving = false;
 
         OnStartMoving += PlayerCharacterController_OnStartMoving;
@@ -86,8 +113,14 @@ public class PlayerCharacterController : MonoBehaviour
     private void CharacterLook()
     {
         float mouseX = Input.GetAxisRaw("Mouse X");
+        float mouseY = Input.GetAxisRaw("Mouse Y");
 
         transform.Rotate(new Vector3(0f, mouseX * mouseSensitivity, 0f), Space.Self);
+
+        cameraVerticalAngle -= mouseY * mouseSensitivity;
+        cameraVerticalAngle = Mathf.Clamp(cameraVerticalAngle, -89f, 89f);
+
+        playerCamera.transform.localEulerAngles = new Vector3(cameraVerticalAngle, 0, 0);
     }
 
     //Shoot Handling
@@ -115,6 +148,13 @@ public class PlayerCharacterController : MonoBehaviour
     //Movement Handling
     private void MovementHandling()
     {
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
+
+        if(isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
+
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
 
@@ -125,6 +165,10 @@ public class PlayerCharacterController : MonoBehaviour
         characterVelocity += characterVelocityMomentum;
 
         characterController.Move(characterVelocity * Time.deltaTime);
+
+        velocity.y += gravity * Time.deltaTime;
+
+        characterController.Move(velocity * Time.deltaTime);
 
         if (characterVelocityMomentum.magnitude > 0f)
         {
