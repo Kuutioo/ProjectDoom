@@ -44,6 +44,9 @@ public class PlayerCharacterController : MonoBehaviour
     private void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
+
+        healthSystem = new HealthSystem(200);
+
         pistolFire = GameObject.Find("Pistol_Fire").gameObject;
 
         pistolFire.SetActive(false);
@@ -94,6 +97,8 @@ public class PlayerCharacterController : MonoBehaviour
             pistolFire.SetActive(true);
             StartCoroutine(FirePistol());
         }
+
+        Debug.Log(GetHealthSystem().GetHealth());
     }
 
     private IEnumerator FirePistol()
@@ -209,8 +214,24 @@ public class PlayerCharacterController : MonoBehaviour
         healthSystem.Damage(damageAmount);
     }
 
+    public void Heal(int healAmount)
+    {
+        healthSystem.Heal(healAmount);
+    }
+
     public HealthSystem GetHealthSystem()
     {
         return healthSystem;
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        HealthPickup healthPickup = collider.GetComponent<HealthPickup>();
+
+        if(healthPickup != null && GetHealthSystem().GetHealth() != 200)
+        {
+            Heal(50);
+            healthPickup.DestroySelf();
+        }
     }
 }
