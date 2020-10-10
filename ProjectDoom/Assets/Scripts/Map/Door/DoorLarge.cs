@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorLarge : MonoBehaviour
+public class DoorLarge : MonoBehaviour, DoorInterface
 {
     public event EventHandler OnOpenDoor;
     public event EventHandler OnCloseDoor;
 
     private Animator animator;
+
+    private bool isOpen = false;
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -30,10 +32,25 @@ public class DoorLarge : MonoBehaviour
     public void OpenDoor()
     {
         OnOpenDoor?.Invoke(this, EventArgs.Empty);
+        isOpen = true;
     }
 
     public void CloseDoor()
     {
         OnCloseDoor?.Invoke(this, EventArgs.Empty);
+        isOpen = false;
+    }
+    public void ToggleDoor()
+    {
+        isOpen = !isOpen;
+
+        if (isOpen)
+        {
+            OpenDoor();
+        }
+        else
+        {
+            CloseDoor();
+        }
     }
 }
