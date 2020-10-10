@@ -228,7 +228,19 @@ public class PlayerCharacterController : MonoBehaviour
     {
         HealthPickup healthPickup = collider.GetComponent<HealthPickup>();
 
-        if(healthPickup != null && GetHealthSystem().GetHealth() != 200)
+        if(healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "5")
+        {
+            Heal(5);
+            healthPickup.DestroySelf();
+        }
+
+        if (healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "10")
+        {
+            Heal(10);
+            healthPickup.DestroySelf();
+        }
+
+        if (healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "50")
         {
             Heal(50);
             healthPickup.DestroySelf();

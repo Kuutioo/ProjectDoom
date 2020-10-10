@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Cube
   - Wall
+  - 10
+  - 5
+  - 50
   layers:
   - Default
   - TransparentFX
