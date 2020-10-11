@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorLarge : MonoBehaviour, DoorInterface
+public class DoorTypeManager : MonoBehaviour, DoorInterface
 {
     public event EventHandler OnOpenDoor;
     public event EventHandler OnCloseDoor;
-
+    
     private Animator animator;
 
     private bool isOpen = false;

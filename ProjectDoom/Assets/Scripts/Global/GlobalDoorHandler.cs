@@ -5,6 +5,7 @@ using UnityEngine;
 public class GlobalDoorHandler : MonoBehaviour
 {
     [SerializeField] private Transform playerTransform;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))

@@ -98,7 +98,7 @@ public class PlayerCharacterController : MonoBehaviour
             StartCoroutine(FirePistol());
         }
 
-        Debug.Log(GetHealthSystem().GetHealth());
+        //Debug.Log(GetHealthSystem().GetHealth());
     }
 
     private IEnumerator FirePistol()
