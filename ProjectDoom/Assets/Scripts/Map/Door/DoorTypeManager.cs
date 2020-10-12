@@ -11,6 +11,7 @@ public class DoorTypeManager : MonoBehaviour, DoorInterface
     private Animator animator;
 
     private bool isOpen = false;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
