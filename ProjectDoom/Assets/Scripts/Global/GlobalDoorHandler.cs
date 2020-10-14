@@ -1,12 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GlobalDoorHandler : MonoBehaviour
 {
     [SerializeField] private Transform playerTransform;
-
-    
 
     public void Update()
     {
@@ -15,7 +14,7 @@ public class GlobalDoorHandler : MonoBehaviour
             float interactRadius = 2f;
             Collider[] colliderArray = Physics.OverlapSphere(playerTransform.transform.position, interactRadius);
 
-            foreach(Collider collider in colliderArray)
+            foreach (Collider collider in colliderArray)
             {
                 KeyDoor keyDoor = collider.GetComponent<KeyDoor>();
                 DoorInterface doorInterface = collider.GetComponent<DoorInterface>();
@@ -29,28 +28,19 @@ public class GlobalDoorHandler : MonoBehaviour
                 }
                 else
                 {
-                    KeyHolder keyHolder = collider.GetComponent<KeyHolder>();
-                    //keyHolder.GetKeyList();
+                   KeyHolder keyHolder = GetComponent<KeyHolder>();
 
-                    foreach(Key.KeyType keyType in keyHolder.GetKeyList())
-                    {
-                        Debug.Log(keyType);
-                    }
-
-                    if (keyDoor != null)
-                    {
-                        if (keyHolder.ConstainsKey(keyDoor.GetKeyType()))
-                        {
+                   if (keyDoor != null)
+                   {
+                       if (keyHolder.ConstainsKey(keyDoor.GetKeyType()))
+                       {
                             doorInterface.OpenDoor();
-                        }
-                        
-                    }
+                       }
+                   }
                 }
             }
         }
     }
-
- 
     private IEnumerator CloseDoorWaitTimer(Collider collider)
     {
         DoorInterface doorInterface = collider.GetComponent<DoorInterface>();
