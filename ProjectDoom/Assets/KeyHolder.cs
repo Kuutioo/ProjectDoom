@@ -11,6 +11,7 @@ public class KeyHolder : MonoBehaviour
 
     private void Awake()
     {
+        //Make the list
         keyList = new List<Key.KeyType>();
     }
 
@@ -21,6 +22,7 @@ public class KeyHolder : MonoBehaviour
 
     public void AddKey(Key.KeyType keyType)
     {
+        //Add key
         Debug.Log("Added Key: " + keyType);
         keyList.Add(keyType);
         OnKeysChanged?.Invoke(this, EventArgs.Empty);
@@ -28,17 +30,20 @@ public class KeyHolder : MonoBehaviour
 
     private void RemoveKey(Key.KeyType keyType)
     {
+        //Remove key if needed
         keyList.Remove(keyType);
         OnKeysChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private bool ConstainsKey(Key.KeyType keyType)
     {
+        //Check if player has the key
         return keyList.Contains(keyType);
     }
 
     private void OnTriggerEnter(Collider collider)
     {
+        //If player enters the key trigger then pickup key
         Key key = collider.GetComponent<Key>();
         if(key != null)
         {
@@ -49,6 +54,7 @@ public class KeyHolder : MonoBehaviour
 
     public void KeyDoor(Collider collider)
     {
+        //Open door that requires key
         KeyDoor keyDoor = collider.GetComponent<KeyDoor>();
         DoorInterface doorInterface = collider.GetComponent<DoorInterface>();
         if (keyDoor != null)
