@@ -7,14 +7,14 @@ public class KeyHolder : MonoBehaviour
 {
     public event EventHandler OnKeysChanged;
 
-    public List<Key.KeyType> keyList;
+    private List<Key.KeyType> keyList;
 
-    public void Awake()
+    private void Awake()
     {
         keyList = new List<Key.KeyType>();
     }
 
-    public List<Key.KeyType> GetKeyList()
+    private List<Key.KeyType> GetKeyList()
     {
         return keyList;
     }
@@ -26,18 +26,18 @@ public class KeyHolder : MonoBehaviour
         OnKeysChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public void RemoveKey(Key.KeyType keyType)
+    private void RemoveKey(Key.KeyType keyType)
     {
         keyList.Remove(keyType);
         OnKeysChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public bool ConstainsKey(Key.KeyType keyType)
+    private bool ConstainsKey(Key.KeyType keyType)
     {
         return keyList.Contains(keyType);
     }
 
-    public void OnTriggerEnter(Collider collider)
+    private void OnTriggerEnter(Collider collider)
     {
         Key key = collider.GetComponent<Key>();
         if(key != null)
@@ -45,19 +45,19 @@ public class KeyHolder : MonoBehaviour
             AddKey(key.GetKeyType());
             Destroy(key.gameObject);
         }
+    }
 
-        //if(Input.GetKeyDown(KeyCode.E))
-        //{
-            //KeyDoor keyDoor = collider.GetComponent<KeyDoor>();
-            //DoorInterface doorInterface = GetComponent<DoorInterface>();
-            //if (keyDoor != null)
-            //{
-                //if (ConstainsKey(keyDoor.GetKeyType()))
-                //{
-                    //Debug.Log("yee");
-                    //doorInterface.OpenDoor();
-                //}
-            //}
-        //} 
+    public void KeyDoor(Collider collider)
+    {
+        KeyDoor keyDoor = collider.GetComponent<KeyDoor>();
+        DoorInterface doorInterface = collider.GetComponent<DoorInterface>();
+        if (keyDoor != null)
+        {
+            if (ConstainsKey(keyDoor.GetKeyType()))
+            {
+                Debug.Log("yee");
+                doorInterface.OpenDoor();
+            }
+        }
     }
 }

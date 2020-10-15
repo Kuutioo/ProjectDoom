@@ -7,7 +7,7 @@ public class GlobalDoorHandler : MonoBehaviour
 {
     [SerializeField] private Transform playerTransform;
 
-    public void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -28,19 +28,14 @@ public class GlobalDoorHandler : MonoBehaviour
                 }
                 else
                 {
-                   KeyHolder keyHolder = GetComponent<KeyHolder>();
+                    KeyHolder keyHolder = GameObject.FindObjectOfType(typeof(KeyHolder)) as KeyHolder;
 
-                   if (keyDoor != null)
-                   {
-                       if (keyHolder.ConstainsKey(keyDoor.GetKeyType()))
-                       {
-                            doorInterface.OpenDoor();
-                       }
-                   }
+                    keyHolder.KeyDoor(collider);
                 }
             }
         }
     }
+
     private IEnumerator CloseDoorWaitTimer(Collider collider)
     {
         DoorInterface doorInterface = collider.GetComponent<DoorInterface>();
