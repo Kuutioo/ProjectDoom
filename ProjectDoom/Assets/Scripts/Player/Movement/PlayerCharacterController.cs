@@ -16,6 +16,8 @@ public class PlayerCharacterController : MonoBehaviour
     private GameObject projectDoomGuyPistol;
     private GameObject projectDoomGuy;
 
+    
+
     private Transform groundCheck;
 
     public LayerMask whatIsGround;
