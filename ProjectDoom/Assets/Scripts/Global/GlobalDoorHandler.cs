@@ -19,7 +19,7 @@ public class GlobalDoorHandler : MonoBehaviour
             foreach (Collider collider in colliderArray)
             {
                 KeyDoor keyDoor = collider.GetComponent<KeyDoor>();
-                DoorInterface doorInterface = collider.GetComponent<DoorInterface>();
+                DoorInterface doorInterface = collider.GetComponent<DoorInterface>(); 
                 if (keyDoor == null)
                 {
                     if (doorInterface != null)
@@ -32,6 +32,7 @@ public class GlobalDoorHandler : MonoBehaviour
                 {
                     //Took 5 days to figure out how to do this fucking piece of shit key door system 
                     KeyHolder keyHolder = GameObject.FindObjectOfType(typeof(KeyHolder)) as KeyHolder;
+
                     keyHolder.KeyDoor(collider);
                 }
             }
