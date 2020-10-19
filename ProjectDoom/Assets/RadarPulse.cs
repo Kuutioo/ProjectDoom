@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class RadarPulse : MonoBehaviour
 {
+    [SerializeField] private Transform radarPingPf;
+    [SerializeField] private Transform playerTransform;
+
     private Transform pulseTransform;
 
     private float range;
@@ -30,16 +33,27 @@ public class RadarPulse : MonoBehaviour
         }
         pulseTransform.localScale = new Vector3(range, range);
 
-        RaycastHit[] raycastHitArray = Physics.SphereCastAll(transform.position, range / 2f, Vector3.zero);
-        foreach(RaycastHit raycastHit in raycastHitArray)
+        Collider[] raycastHitArray = Physics.OverlapSphere(playerTransform.transform.position, range / 2f);
+        foreach(Collider collider in raycastHitArray)
         {
-            if (raycastHit.collider != null)
+            if (collider != null)
             {
+                //Debug.Log("yee");
                 //Hit something
-                if (alreadyPingedColliderList.Contains(raycastHit.collider))
+                if (!alreadyPingedColliderList.Contains(collider))
                 {
-                    alreadyPingedColliderList.Add(raycastHit.collider);
+                    alreadyPingedColliderList.Add(collider);
                     Debug.Log("Yee");
+
+                    Transform radarPingTransform = Instantiate(radarPingPf, collider.transform.localPosition, Quaternion.identity);
+                    RadarPing radarPing = radarPingTransform.GetComponent<RadarPing>();
+                    
+                    if(collider.gameObject.GetComponent<HealthPickup>() != null)
+                    {
+                        //Hit health object
+                        radarPing.SetColor(new Color(0, 1, 0));
+                    }
+                    
                 }
             }
         }
