@@ -186,6 +186,17 @@ public class PlayerCharacterController : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            moveSpeed = 16f;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            moveSpeed = 12f;
+        }
+
+
         Vector3 newPosition = transform.position;
 
         if (newPosition != lastPosition)
