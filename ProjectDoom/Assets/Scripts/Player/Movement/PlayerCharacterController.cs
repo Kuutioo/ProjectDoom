@@ -10,7 +10,6 @@ public class PlayerCharacterController : MonoBehaviour
 
     public event EventHandler OnStartMoving;
     public event EventHandler OnStopMoving;
-    public event EventHandler OnShoot;
 
     private GameObject pistolFire;
     private GameObject projectDoomGuyPistol;
@@ -45,15 +44,13 @@ public class PlayerCharacterController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
 
-        
-
         healthSystem = new HealthSystem(200);
 
         pistolFire = GameObject.Find("Pistol_Fire").gameObject;
 
         pistolFire.SetActive(false);
 
-        projectDoomGuyPistol = GameObject.Find("Weapon").gameObject;
+        projectDoomGuyPistol = GameObject.Find("CurrentItem").gameObject;
         pistolAnimator = projectDoomGuyPistol.GetComponent<Animator>();
 
         characterController = GetComponent<CharacterController>();
@@ -69,7 +66,6 @@ public class PlayerCharacterController : MonoBehaviour
 
         OnStartMoving += PlayerCharacterController_OnStartMoving;
         OnStopMoving += PlayerCharacterController_OnStopMoving;
-        OnShoot += PlayerCharacterController_OnShoot;
     }
 
 
@@ -82,11 +78,6 @@ public class PlayerCharacterController : MonoBehaviour
     private void PlayerCharacterController_OnStartMoving(object sender, EventArgs e)
     {
         playerCameraAnimator.SetBool("IsWalking", isMoving);
-    }
-
-    private void PlayerCharacterController_OnShoot(object sender, EventArgs e)
-    {
-        pistolAnimator.SetTrigger("Shoot");
     }
 
     void Update()
@@ -133,7 +124,7 @@ public class PlayerCharacterController : MonoBehaviour
     //Shoot Handling
     private void ShootHandling()
     {
-        UIItemManager uiItemManager = GetComponent<UIItemManager>();
+        UIItemManager uiItemManager = GameObject.FindObjectOfType(typeof(UIItemManager)) as UIItemManager;
         Vector3 halfBoxSize = new Vector3(0.5f, 0.55f, 20f);
         float playerHeightOffset = 0.5f;
         Collider[] colliderArray = Physics.OverlapBox(transform.position + transform.up * playerHeightOffset + transform.forward * halfBoxSize.z, halfBoxSize, transform.rotation);
@@ -149,8 +140,7 @@ public class PlayerCharacterController : MonoBehaviour
             }
         }
 
-        OnShoot?.Invoke(this, EventArgs.Empty);
-        Debug.Log("Shoot");
+        uiItemManager.TriggerShoot();
     }
 
     //Movement Handling
@@ -240,11 +230,13 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
+        UIItemManager uiItemManager = GameObject.FindObjectOfType(typeof(UIItemManager)) as UIItemManager;
         HealthPickup healthPickup = collider.GetComponent<HealthPickup>();
 
         if(healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "5")
         {
             Heal(5);
+            uiItemManager.TriggerSmallHeal();
             healthPickup.DestroySelf();
         }
 
