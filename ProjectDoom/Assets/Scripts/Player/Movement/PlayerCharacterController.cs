@@ -45,6 +45,8 @@ public class PlayerCharacterController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
 
+        
+
         healthSystem = new HealthSystem(200);
 
         pistolFire = GameObject.Find("Pistol_Fire").gameObject;
@@ -131,6 +133,7 @@ public class PlayerCharacterController : MonoBehaviour
     //Shoot Handling
     private void ShootHandling()
     {
+        UIItemManager uiItemManager = GetComponent<UIItemManager>();
         Vector3 halfBoxSize = new Vector3(0.5f, 0.55f, 20f);
         float playerHeightOffset = 0.5f;
         Collider[] colliderArray = Physics.OverlapBox(transform.position + transform.up * playerHeightOffset + transform.forward * halfBoxSize.z, halfBoxSize, transform.rotation);
