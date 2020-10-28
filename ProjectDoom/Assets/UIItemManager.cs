@@ -6,13 +6,15 @@ using UnityEngine.UI;
 
 public class UIItemManager : MonoBehaviour
 {
+    [SerializeField] private PlayerCharacterController player;
+
     private Animator[] animator;
 
     public event EventHandler OnPistolShoot;
     public event EventHandler OnSmallHeal;
 
-    private int selectedWeapon = 0;
-    
+    public int selectedWeapon = 0;
+    public int previousSelectedWeapon;
 
     private void Awake()
     {
@@ -20,11 +22,11 @@ public class UIItemManager : MonoBehaviour
 
         SelectWeapon();
 
-        OnPistolShoot += UIItemManager_OnShoot;
-        OnSmallHeal += UIItemManager_OnSmallHeal;
+        player.Healed += UIItemManager_OnSmallHeal;
+        player.Shooted += UIItemManager_OnShoot;
     }
 
-    private void UIItemManager_OnShoot(object sender, EventArgs e)
+    private void UIItemManager_OnShoot()
     {
         foreach(Animator anim in animator)
         {
@@ -32,10 +34,10 @@ public class UIItemManager : MonoBehaviour
         }
     }
 
-    private void UIItemManager_OnSmallHeal(object sender, EventArgs e)
+    private void UIItemManager_OnSmallHeal()
     {
-        int previousSelectedWeapon = selectedWeapon;
-        selectedWeapon++;
+        previousSelectedWeapon = selectedWeapon;
+        selectedWeapon = 1;
 
         if(previousSelectedWeapon != selectedWeapon)
         {
@@ -46,32 +48,13 @@ public class UIItemManager : MonoBehaviour
                 float lengthOfAnim = 1.9f;
                 Invoke("AfterAnimIsDone", lengthOfAnim);
             }
-
         }
     }
 
     private void AfterAnimIsDone()
     {
-        foreach (Animator anim in animator)
-        {
-            anim.SetBool("IsFinished", true);
-
-            if (anim.GetBool("IsFinished") == true)
-            {
-                selectedWeapon--;
-                SelectWeapon();
-            }
-        }
-    }
-
-    public void TriggerShoot()
-    {
-        OnPistolShoot?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void TriggerSmallHeal()
-    {
-        OnSmallHeal?.Invoke(this, EventArgs.Empty);
+        selectedWeapon = previousSelectedWeapon;
+        SelectWeapon();
     }
 
     private void SelectWeapon()

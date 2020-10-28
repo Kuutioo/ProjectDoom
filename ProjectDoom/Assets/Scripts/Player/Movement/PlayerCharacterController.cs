@@ -38,6 +38,12 @@ public class PlayerCharacterController : MonoBehaviour
 
     private HealthSystem healthSystem;
 
+    public delegate void TriggerHeal();
+    public delegate void TriggerShoot();
+
+    public event TriggerHeal Healed;
+    public event TriggerShoot Shooted;
+
     private void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -135,7 +141,7 @@ public class PlayerCharacterController : MonoBehaviour
             }
         }
 
-        uiItemManager.TriggerShoot();
+        Shooted?.Invoke();
     }
 
     //Movement Handling
@@ -231,7 +237,7 @@ public class PlayerCharacterController : MonoBehaviour
         if(healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "5")
         {
             Heal(5);
-            uiItemManager.TriggerSmallHeal();
+            Healed?.Invoke();
             healthPickup.DestroySelf();
         }
 
