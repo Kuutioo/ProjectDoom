@@ -12,7 +12,6 @@ public class PlayerCharacterController : MonoBehaviour
     public event EventHandler OnStopMoving;
 
     private GameObject pistolFire;
-    private GameObject projectDoomGuyPistol;
     private GameObject projectDoomGuy;
 
     private Transform groundCheck;
@@ -25,7 +24,6 @@ public class PlayerCharacterController : MonoBehaviour
     [SerializeField] private float groundDistance = 0.4f;
 
     private Animator playerCameraAnimator;
-    private Animator pistolAnimator;
 
     private float cameraVerticalAngle;
 
@@ -49,9 +47,6 @@ public class PlayerCharacterController : MonoBehaviour
         pistolFire = GameObject.Find("Pistol_Fire").gameObject;
 
         pistolFire.SetActive(false);
-
-        projectDoomGuyPistol = GameObject.Find("CurrentItem").gameObject;
-        pistolAnimator = projectDoomGuyPistol.GetComponent<Animator>();
 
         characterController = GetComponent<CharacterController>();
 
