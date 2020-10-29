@@ -12,7 +12,7 @@ public class PlayerCharacterController : MonoBehaviour
     public event EventHandler OnStopMoving;
 
     private GameObject pistolFire;
-    private GameObject projectDoomGuy;
+    private GameObject player;
 
     private Transform groundCheck;
 
@@ -34,7 +34,7 @@ public class PlayerCharacterController : MonoBehaviour
 
     private bool isMoving;
     private bool isGrounded;
-    private bool canShoot = false;
+    public bool canShoot = false;
 
     private HealthSystem healthSystem;
 
@@ -59,9 +59,9 @@ public class PlayerCharacterController : MonoBehaviour
         playerCamera = transform.Find("PlayerCamera").GetComponent<Camera>();
         playerCameraAnimator = playerCamera.GetComponent<Animator>();
 
-        projectDoomGuy = this.gameObject;
+        player = this.gameObject;
 
-        groundCheck = projectDoomGuy.transform.Find("GroundCheck");
+        groundCheck = player.transform.Find("GroundCheck");
        
         isMoving = false;
 
@@ -125,6 +125,7 @@ public class PlayerCharacterController : MonoBehaviour
     //Shoot Handling
     private void ShootHandling()
     {
+        //Change shooting to raycast later
         UIItemManager uiItemManager = GameObject.FindObjectOfType(typeof(UIItemManager)) as UIItemManager;
         Vector3 halfBoxSize = new Vector3(0.5f, 0.55f, 20f);
         float playerHeightOffset = 0.5f;
@@ -147,6 +148,7 @@ public class PlayerCharacterController : MonoBehaviour
     //Movement Handling
     private void MovementHandling()
     {
+        //Check if player is grounded
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
 
         if(isGrounded && velocity.y < 0)
@@ -234,6 +236,7 @@ public class PlayerCharacterController : MonoBehaviour
         UIItemManager uiItemManager = GameObject.FindObjectOfType(typeof(UIItemManager)) as UIItemManager;
         HealthPickup healthPickup = collider.GetComponent<HealthPickup>();
 
+        //Change the tag system to something better and cleaner
         if(healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "5")
         {
             Heal(5);

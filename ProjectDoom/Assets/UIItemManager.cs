@@ -10,9 +10,6 @@ public class UIItemManager : MonoBehaviour
 
     private Animator[] animator;
 
-    public event EventHandler OnPistolShoot;
-    public event EventHandler OnSmallHeal;
-
     public int selectedWeapon = 0;
     public int previousSelectedWeapon;
 
@@ -44,6 +41,7 @@ public class UIItemManager : MonoBehaviour
             SelectWeapon();
             foreach(Animator anim in animator)
             {
+                player.canShoot = true;
                 anim.SetTrigger("SmallHeal");
                 float lengthOfAnim = 1.9f;
                 Invoke("AfterAnimIsDone", lengthOfAnim);
@@ -55,6 +53,7 @@ public class UIItemManager : MonoBehaviour
     {
         selectedWeapon = previousSelectedWeapon;
         SelectWeapon();
+        player.canShoot = false;
     }
 
     private void SelectWeapon()

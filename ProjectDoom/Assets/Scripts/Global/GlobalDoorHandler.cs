@@ -30,10 +30,13 @@ public class GlobalDoorHandler : MonoBehaviour
                 }
                 else
                 {
-                    //Took 5 days to figure out how to do this fucking piece of shit key door system 
-                    StartCoroutine(CloseDoorWaitTimer(collider));
-                    KeyHolder keyHolder = GameObject.FindObjectOfType(typeof(KeyHolder)) as KeyHolder;
-                    keyHolder.KeyDoor(collider);
+                    if (doorInterface != null)
+                    {
+                        //Took 5 days to figure out how to do this fucking piece of shit key door system 
+                        StartCoroutine(CloseDoorWaitTimer(collider));
+                        KeyHolder keyHolder = GameObject.FindObjectOfType(typeof(KeyHolder)) as KeyHolder;
+                        keyHolder.KeyDoor(collider);
+                    }
                 }
             }
         }
