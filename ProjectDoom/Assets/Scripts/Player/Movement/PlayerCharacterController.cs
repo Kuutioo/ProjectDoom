@@ -27,6 +27,8 @@ public class PlayerCharacterController : MonoBehaviour
 
     private float cameraVerticalAngle;
 
+    private int smallHealCount = 0;
+
     private Camera playerCamera;
 
     private Vector3 characterVelocityMomentum;
@@ -38,32 +40,31 @@ public class PlayerCharacterController : MonoBehaviour
 
     private HealthSystem healthSystem;
 
-    public delegate void TriggerHeal();
+    public delegate void TriggerSmallHeal();
     public delegate void TriggerShoot();
+    public delegate void UpdateSmallHealCount();
 
-    public event TriggerHeal Healed;
+    public event TriggerSmallHeal SmallHealed;
     public event TriggerShoot Shooted;
+    public event UpdateSmallHealCount SmallHealCountUpdated;
 
     private void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
 
+        player = this.gameObject;
+
         healthSystem = new HealthSystem(200);
-
-        pistolFire = GameObject.Find("Pistol_Fire").gameObject;
-
-        pistolFire.SetActive(false);
 
         characterController = GetComponent<CharacterController>();
 
+        pistolFire = GameObject.Find("Pistol_Fire").gameObject;
+        groundCheck = player.transform.Find("GroundCheck");
         playerCamera = transform.Find("PlayerCamera").GetComponent<Camera>();
         playerCameraAnimator = playerCamera.GetComponent<Animator>();
 
-        player = this.gameObject;
-
-        groundCheck = player.transform.Find("GroundCheck");
-       
         isMoving = false;
+        pistolFire.SetActive(false);
 
         OnStartMoving += PlayerCharacterController_OnStartMoving;
         OnStopMoving += PlayerCharacterController_OnStopMoving;
@@ -201,7 +202,6 @@ public class PlayerCharacterController : MonoBehaviour
             {
                 isMoving = true;
                 OnStartMoving?.Invoke(this, EventArgs.Empty);
-                Debug.Log("Is moving");
             }
         }
         else
@@ -210,9 +210,18 @@ public class PlayerCharacterController : MonoBehaviour
             {
                 isMoving = false;
                 OnStopMoving?.Invoke(this, EventArgs.Empty);
-                Debug.Log("Not moving");
             }
         }
+    }
+
+    public int GetSmallHealCount()
+    {
+        return smallHealCount;
+    }
+
+    public int AddValue()
+    {
+        return smallHealCount + 1;
     }
 
     //Health System stuff
@@ -239,8 +248,7 @@ public class PlayerCharacterController : MonoBehaviour
         //Change the tag system to something better and cleaner
         if(healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "5")
         {
-            Heal(5);
-            Healed?.Invoke();
+            SmallHealCountUpdated?.Invoke();
             healthPickup.DestroySelf();
         }
 

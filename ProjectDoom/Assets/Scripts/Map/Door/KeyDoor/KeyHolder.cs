@@ -61,7 +61,6 @@ public class KeyHolder : MonoBehaviour
         {
             if (ConstainsKey(keyDoor.GetKeyType()))
             {
-                Debug.Log("yee");
                 doorInterface.OpenDoor();
             }
         }

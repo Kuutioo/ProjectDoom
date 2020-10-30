@@ -19,7 +19,7 @@ public class UIItemManager : MonoBehaviour
 
         SelectWeapon();
 
-        player.Healed += UIItemManager_OnSmallHeal;
+        player.SmallHealed += UIItemManager_OnSmallHeal;
         player.Shooted += UIItemManager_OnShoot;
     }
 
