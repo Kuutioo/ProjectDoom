@@ -1,30 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class InventoryHUD : MonoBehaviour
 {
-    [SerializeField] private PlayerCharacterController player;
-
-    private Text smallHealText;
+    private Inventory inventory;
+    private Transform hudImage;
+    private Transform itemSlot;
 
     private void Awake()
     {
-        smallHealText = transform.Find("SmallHealText").GetComponent<Text>();
-        player.SmallHealCountUpdated += InventoryHUD_SmallHealCountUpdated;
-
-        Refresh();
+        hudImage = transform.Find("HUDImage");
+        itemSlot = hudImage.Find("ItemSlot");
     }
 
-    private void InventoryHUD_SmallHealCountUpdated()
+    public void SetInventory(Inventory inventory)
     {
-        Refresh();
+        this.inventory = inventory;
+        RefreshInventoryItems();
     }
-
-    private void Refresh()
+    
+    private void RefreshInventoryItems()
     {
-        player.AddValue();
-        smallHealText.text = player.GetSmallHealCount().ToString();
+        foreach(Item item in inventory.GetItemList())
+        {
+            RectTransform itemslotRectTransform = Instantiate(hudImage, itemSlot).GetComponent<RectTransform>();
+            itemslotRectTransform.gameObject.SetActive(true);
+        }
     }
 }

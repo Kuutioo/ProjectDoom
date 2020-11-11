@@ -22,6 +22,7 @@ public class PlayerCharacterController : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 1f;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private InventoryHUD inventoryHUD;
 
     private Animator playerCameraAnimator;
 
@@ -39,6 +40,7 @@ public class PlayerCharacterController : MonoBehaviour
     public bool canShoot = false;
 
     private HealthSystem healthSystem;
+    private Inventory inventory;
 
     public delegate void TriggerSmallHeal();
     public delegate void TriggerShoot();
@@ -55,6 +57,8 @@ public class PlayerCharacterController : MonoBehaviour
         player = this.gameObject;
 
         healthSystem = new HealthSystem(200);
+        inventory = new Inventory();
+        inventoryHUD.SetInventory(inventory);
 
         characterController = GetComponent<CharacterController>();
 
@@ -248,7 +252,7 @@ public class PlayerCharacterController : MonoBehaviour
         //Change the tag system to something better and cleaner
         if(healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "5")
         {
-            SmallHealCountUpdated?.Invoke();
+            SmallHealed.Invoke();
             healthPickup.DestroySelf();
         }
 
