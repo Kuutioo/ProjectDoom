@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIItemManager : MonoBehaviour
+public class PlayerHUD : MonoBehaviour
 {
     [SerializeField] private PlayerCharacterController player;
 
@@ -19,11 +19,11 @@ public class UIItemManager : MonoBehaviour
 
         SelectWeapon();
 
-        player.SmallHealed += UIItemManager_OnSmallHeal;
-        player.Shooted += UIItemManager_OnShoot;
+        player.SmallHealed += PlayerHUD_OnSmallHeal;
+        player.Shooted += PlayerHUD_OnShoot;
     }
 
-    private void UIItemManager_OnShoot()
+    private void PlayerHUD_OnShoot()
     {
         foreach(Animator anim in animator)
         {
@@ -31,7 +31,7 @@ public class UIItemManager : MonoBehaviour
         }
     }
 
-    private void UIItemManager_OnSmallHeal()
+    private void PlayerHUD_OnSmallHeal()
     {
         previousSelectedWeapon = selectedWeapon;
         selectedWeapon = 1;

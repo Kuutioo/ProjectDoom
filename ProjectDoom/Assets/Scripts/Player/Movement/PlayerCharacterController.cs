@@ -44,11 +44,9 @@ public class PlayerCharacterController : MonoBehaviour
 
     public delegate void TriggerSmallHeal();
     public delegate void TriggerShoot();
-    public delegate void UpdateSmallHealCount();
 
     public event TriggerSmallHeal SmallHealed;
     public event TriggerShoot Shooted;
-    public event UpdateSmallHealCount SmallHealCountUpdated;
 
     private void Awake()
     {
@@ -131,7 +129,7 @@ public class PlayerCharacterController : MonoBehaviour
     private void ShootHandling()
     {
         //Change shooting to raycast later
-        UIItemManager uiItemManager = GameObject.FindObjectOfType(typeof(UIItemManager)) as UIItemManager;
+        PlayerHUD playerHUD = GameObject.FindObjectOfType(typeof(PlayerHUD)) as PlayerHUD;
         Vector3 halfBoxSize = new Vector3(0.5f, 0.55f, 20f);
         float playerHeightOffset = 0.5f;
         Collider[] colliderArray = Physics.OverlapBox(transform.position + transform.up * playerHeightOffset + transform.forward * halfBoxSize.z, halfBoxSize, transform.rotation);
@@ -218,16 +216,6 @@ public class PlayerCharacterController : MonoBehaviour
         }
     }
 
-    public int GetSmallHealCount()
-    {
-        return smallHealCount;
-    }
-
-    public int AddValue()
-    {
-        return smallHealCount + 1;
-    }
-
     //Health System stuff
     public void Damage(int damageAmount)
     {
@@ -246,23 +234,23 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        UIItemManager uiItemManager = GameObject.FindObjectOfType(typeof(UIItemManager)) as UIItemManager;
+        PlayerHUD playerHUD = GameObject.FindObjectOfType(typeof(PlayerHUD)) as PlayerHUD;
         HealthPickup healthPickup = collider.GetComponent<HealthPickup>();
 
         //Change the tag system to something better and cleaner
-        if(healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "5")
+        if(healthPickup != null && healthPickup.tag == "5")
         {
-            SmallHealed.Invoke();
+            inventory.AddItem(new Item { itemType = Item.ItemType.SmallHeal, amount = 1 });
             healthPickup.DestroySelf();
         }
 
-        if (healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "10")
+        if (healthPickup != null && healthPickup.tag == "10")
         {
-            Heal(10);
+            inventory.AddItem(new Item { itemType = Item.ItemType.MediumHeal, amount = 1 });
             healthPickup.DestroySelf();
         }
 
-        if (healthPickup != null && GetHealthSystem().GetHealth() != 200 && healthPickup.tag == "50")
+        if (healthPickup != null && healthPickup.tag == "50")
         {
             Heal(50);
             healthPickup.DestroySelf();
