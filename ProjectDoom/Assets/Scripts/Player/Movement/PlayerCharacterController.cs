@@ -28,8 +28,6 @@ public class PlayerCharacterController : MonoBehaviour
 
     private float cameraVerticalAngle;
 
-    private int smallHealCount = 0;
-
     private Camera playerCamera;
 
     private Vector3 characterVelocityMomentum;
@@ -55,7 +53,7 @@ public class PlayerCharacterController : MonoBehaviour
         player = this.gameObject;
 
         healthSystem = new HealthSystem(200);
-        inventory = new Inventory();
+        inventory = new Inventory(UseItem);
         inventoryHUD.SetInventory(inventory);
 
         characterController = GetComponent<CharacterController>();
@@ -72,6 +70,15 @@ public class PlayerCharacterController : MonoBehaviour
         OnStopMoving += PlayerCharacterController_OnStopMoving;
     }
 
+    private void UseItem(Item item)
+    {
+        switch (item.itemType)
+        {
+            case Item.ItemType.SmallHeal:
+                inventory.RemoveItem(new Item { itemType = Item.ItemType.SmallHeal, amount = 1 });
+                break;
+        }
+    }
 
     //Animator stuff
     private void PlayerCharacterController_OnStopMoving(object sender, EventArgs e)
@@ -95,7 +102,9 @@ public class PlayerCharacterController : MonoBehaviour
             StartCoroutine(FirePistol());
         }
 
-        //Debug.Log(GetHealthSystem().GetHealth());
+        InputHandling();
+
+        Debug.Log(GetHealthSystem().GetHealth());
     }
 
     private IEnumerator FirePistol()
@@ -195,7 +204,6 @@ public class PlayerCharacterController : MonoBehaviour
             moveSpeed = 12f;
         }
 
-
         Vector3 newPosition = transform.position;
 
         if (newPosition != lastPosition)
@@ -216,6 +224,18 @@ public class PlayerCharacterController : MonoBehaviour
         }
     }
 
+    private void InputHandling()
+    {
+        foreach(Item item in inventory.GetItemList())
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                inventory.UseItem(item);
+            }
+        }
+    }
+
+
     //Health System stuff
     public void Damage(int damageAmount)
     {
@@ -234,7 +254,6 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        PlayerHUD playerHUD = GameObject.FindObjectOfType(typeof(PlayerHUD)) as PlayerHUD;
         HealthPickup healthPickup = collider.GetComponent<HealthPickup>();
 
         //Change the tag system to something better and cleaner
@@ -246,13 +265,11 @@ public class PlayerCharacterController : MonoBehaviour
 
         if (healthPickup != null && healthPickup.tag == "10")
         {
-            inventory.AddItem(new Item { itemType = Item.ItemType.MediumHeal, amount = 1 });
             healthPickup.DestroySelf();
         }
 
         if (healthPickup != null && healthPickup.tag == "50")
         {
-            Heal(50);
             healthPickup.DestroySelf();
         }
     }

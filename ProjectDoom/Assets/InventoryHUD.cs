@@ -46,6 +46,7 @@ public class InventoryHUD : MonoBehaviour
 
         foreach (Item item in inventory.GetItemList())
         {
+
             RectTransform itemSlotRectTransform = Instantiate(itemTemplate, itemSlot).GetComponent<RectTransform>();
             itemSlotRectTransform.gameObject.SetActive(true);
 
